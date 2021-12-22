@@ -1,0 +1,3 @@
+#!/bin/sh
+chown -R klipper:klipper /opt/cfg /opt/logs /opt/run /opt/gcode /opt/db
+/usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf

@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  klipper:
+    build: 
+      context: src/klipper
+    cap_add:
+    - SYS_RAWIO
+    devices:
+    - /dev/ttyS5:/dev/dc-printer
+    - /dev/gpiochip1:/dev/gpiochip
+  
+  mainsail:
+    build:
+      context: src/mainsail
+    ports:
+      - 8080:80
