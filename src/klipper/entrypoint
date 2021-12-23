@@ -1,3 +1,11 @@
 #!/bin/sh
+
+for f in moonraker.conf printer.cfg; do
+  if [[ ! -f "/opt/cfg/$f" ]]; then
+    cp "/opt/cfg-default/$f" "/opt/cfg/$f"
+  fi
+done
+
 chown -R klipper:klipper /opt/cfg /opt/logs /opt/run /opt/gcode /opt/db
+
 /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf

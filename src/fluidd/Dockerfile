@@ -12,7 +12,7 @@ FROM nginx:alpine
 ENV JPEG_STREAM_HOST localhost
 ENV JPEG_STREAM_PORT 8080
 
-COPY --chown=101:101 config/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --chown=101:101 nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=unzip --chown=101:101 /frontend /usr/share/nginx/html
-COPY --chown=101:101 config/fluidd.json /usr/share/nginx/html/config.json
+COPY --chown=101:101 fluidd.json /usr/share/nginx/html/config.json
 EXPOSE 80

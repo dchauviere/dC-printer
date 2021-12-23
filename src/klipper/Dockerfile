@@ -20,13 +20,19 @@ RUN apk --no-cache --update add build-base \
       py3-virtualenv \
       python3-dev \
       libffi-dev \
-      ncurses-dev
+      ncurses-dev \
+      newlib-arm-none-eabi \
+      gcc-arm-none-eabi \
+      stm32flash \
+      libusb-dev
 
 # Klipper build
 RUN git clone --depth=1 -b "${KLIPPER_VERSION}" https://github.com/Klipper3d/klipper /opt/klipper
 RUN cd /opt/klipper \
   && python -m venv venv \
-  && venv/bin/pip install -r scripts/klippy-requirements.txt
+  && venv/bin/pip install -r scripts/klippy-requirements.txt \
+  && venv/bin/python -m compileall klippy \
+	&& venv/bin/python klippy/chelper/__init__.py
 
 # Moonraker build
 RUN git clone --depth=1 -b "${MOONRAKER_VERSION}" https://github.com/Arksine/moonraker /opt/moonraker
@@ -49,11 +55,7 @@ RUN apk --no-cache --update add \
       jpeg \
       iproute2 \
       git \
-      supervisor \
-      newlib-arm-none-eabi \
-      gcc-arm-none-eabi \
-      stm32flash \
-      libusb-dev
+      supervisor
 
 COPY --from=build /opt/moonraker /opt/moonraker
 COPY --from=build /opt/klipper /opt/klipper
@@ -69,7 +71,7 @@ RUN addgroup klipper \
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY entrypoint /entrypoint
 
-COPY moonraker.conf printer.cfg /opt/cfg/
+COPY moonraker.conf printer.cfg /opt/cfg-default/
 
 EXPOSE 7125
 VOLUME ["/opt/run", "/opt/gcode", "/opt/db", "/opt/logs"]

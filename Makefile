@@ -1,10 +1,8 @@
-.PHONY: all
+.PHONY: all push
 
-all: klipper moonraker fluidd mjpg-streamer mainsail
+all: klipper fluidd mjpg-streamer mainsail
 
 klipper: .build/klipper-dep
-
-moonraker: .build/moonraker-dep
 
 fluidd: .build/fluidd-dep
 
@@ -16,22 +14,23 @@ mjpg-streamer: .build/mjpg-streamer-dep
 	mkdir -p .build
 
 .build/klipper-dep: .build
-	docker build -t klipper "https://github.com/Klipper3d/klipper.git#master" -f scripts/Dockerfile
-	touch $@
-
-.build/moonraker-dep: .build
-	docker build src/moonraker -t moonraker
+	docker buildx build --platform linux/arm64 -t dawei06/klipper src/klipper -o type=docker
 	touch $@
 
 .build/fluidd-dep: .build
-	docker build . -t moonraker -f src/fluidd/Dockerfile
+	docker buildx build --platform linux/arm64 -t dawei06/fluidd src/fluidd -o type=docker
 	touch $@
 
 .build/mjpg-streamer-dep: .build
-	#docker build -t mjpg-streamer "https://github.com/jacksonliam/mjpg-streamer.git" -f mjpg-streamer-experimental/Dockerfile
-	docker build -t mjpg-streamer src/mjpg-streamer
+	docker buildx build --platform linux/arm64 -t dawei06/mjpg-streamer src/mjpg-streamer -o type=docker
 	touch $@
 
 .build/mainsail-dep: .build
-	docker build . -t mainsail -f src/mainsail/Dockerfile
+	docker buildx build --platform linux/arm64 -t dawei06/mainsail src/mainsail -o type=docker
 	touch $@
+
+push:
+	docker push dawei06/klipper
+	docker push dawei06/mainsail
+	docker push dawei06/mjpg-streamer
+	docker push dawei06/fluidd
