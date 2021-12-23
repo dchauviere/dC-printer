@@ -7,10 +7,10 @@ services:
     - SYS_RAWIO
     devices:
     - /dev/ttyS5:/dev/dc-printer
-    - /dev/gpiochip1:/dev/gpiochip
+    - /dev/gpiochip1:/dev/gpiochip1
   
   mainsail:
     build:
       context: src/mainsail
     ports:
-      - 8080:80
+      - 80:80

@@ -49,7 +49,11 @@ RUN apk --no-cache --update add \
       jpeg \
       iproute2 \
       git \
-      supervisor
+      supervisor \
+      newlib-arm-none-eabi \
+      gcc-arm-none-eabi \
+      stm32flash \
+      libusb-dev
 
 COPY --from=build /opt/moonraker /opt/moonraker
 COPY --from=build /opt/klipper /opt/klipper
